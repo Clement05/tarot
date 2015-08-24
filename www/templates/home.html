@@ -1,5 +1,6 @@
 <ion-view view-title="Home">
     <ion-content class="padding">
+    {{$storage}}
         <form ng-submit="">
             <button class="button button-block button-positive icon-right ion-ios-game-controller-b" ng-click="set_party()">
                 Commencer une partie
@@ -12,14 +13,17 @@
             </div>
             <h2 class="title">Parties Sauvegardées</h2>
             <div class="buttons">
+                <button class="button" ng-click="refresh()">
+                    Rafraîchir
+                </button>
                 <button class="button" ng-click="data.showDelete = false; data.showReorder = !data.showReorder">
-                    Reorder
+                    Trier
                 </button>
             </div>
         </div>
         <ion-list show-delete="data.showDelete" show-reorder="data.showReorder">
-
-            <ion-item ng-repeat="party in parties"
+<ion-item></ion-item>
+            <ion-item ng-repeat="party in parties track by $index"
             item="party"
             href="" class="item-remove-animate" ng-click="show(party, $index)">
                 {{ party.date }}

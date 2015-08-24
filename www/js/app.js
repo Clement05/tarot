@@ -400,6 +400,9 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
     showDelete: false
   };
   
+  $scope.refresh = function() {
+    location.reload();   
+  };
   $scope.edit = function(item) {
     alert('Edit Item: ');
   };
@@ -407,7 +410,7 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
     alert('Share Item: ');
   };
   $scope.show = function(item, index) {
-    var current = index - 1;
+    var current = index; //-1
     sessionStorage.setItem('party', current);
     var parties = JSON.parse(localStorage.getItem('parties'));
     var party = parties[current];
@@ -421,8 +424,11 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
   };
   
   $scope.moveItem = function(item, fromIndex, toIndex) {
-    $scope.parties.splice(fromIndex, 1);
-    $scope.parties.splice(toIndex, 0, item);
+    $scope.parties.splice(fromIndex-1, 1);
+    $scope.parties.splice(toIndex-1, 0, item);
+    
+    var JSONString = JSON.stringify($scope.parties);
+	localStorage.setItem('parties', JSONString);
   };
   
   $scope.onItemDelete = function(item, index) {
