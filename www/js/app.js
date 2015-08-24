@@ -49,33 +49,46 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
 })
 .controller("DealsCtrl", function($scope, $state, $stateParams, dataFactory) {
 	$scope.data = dataFactory;
-	$scope.players = dataFactory.players
-	$scope.deals = dataFactory.deals
+	//$scope.players = dataFactory.players;
+	//$scope.deals = dataFactory.deals;
 	//$scope.supp = $stateParams.supp;
 	
 	$scope.form_deals= function() {
-		$state.go("deal",{players:JSON.stringify($scope.players), deals:$scope.deals.length});
+		$state.go("deal",{players:JSON.stringify(dataFactory.players), deals:dataFactory.deals.length});
 	}
 	
 	$scope.compute_totals= function() {
-		$scope.totals = Array.apply(null, Array($scope.players.length)).map(Number.prototype.valueOf,0);
-		if($scope.deals != undefined && $scope.deals.length > 0){
-			for(var i = 0; i < $scope.deals.length; i++){
-				for(var k = 0; k < $scope.deals[i].score.length; k++){
-					$scope.totals[k] += $scope.deals[i].score[k].score;
+		$scope.totals = Array.apply(null, Array(dataFactory.players.length)).map(Number.prototype.valueOf,0);
+		if(dataFactory.deals != undefined && dataFactory.deals.length > 0){
+			for(var i = 0; i < dataFactory.deals.length; i++){
+				for(var k = 0; k < dataFactory.deals[i].score.length; k++){
+					$scope.totals[k] += dataFactory.deals[i].score[k].score;
 				}
 			}
 		}
 		console.log($scope.totals);
 	}
 	$scope.removeRow = function(args){	
-		$scope.deals.splice( args, 1 );
+		dataFactory.deals.splice( args, 1 );
 		$scope.compute_totals();		
 	};
 	$scope.editRow = function(args){	
 		$state.go("deal",{deals:args, action:'edit'});	
 	};
 	
+	$scope.save = function(args){	
+		var parties = JSON.parse(localStorage.getItem('parties'));	
+		var current = JSON.parse(sessionStorage.getItem('party'));
+		var party = parties[current];
+		party.players = dataFactory.players;
+		party.deals = dataFactory.deals;
+		
+		parties.splice(current, 1, party);
+		console.log("--- modification de la sauvegarde ---");
+		console.log(party);
+		var JSONString = JSON.stringify(parties);
+		localStorage.setItem('parties', JSONString)		
+	};
 	$scope.compute_totals();
 
 })
@@ -111,6 +124,11 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
 		{value:'Aucun', checked:true}, 
 		{value:'Attaque', checked:false}, 
 		{value:'Défense', checked:false}
+		];
+	$scope.handleValues = [
+		{name:'Simple', checked:true, value:10}, 
+		{name:'Double', checked:false, value:20}, 
+		{name:'Triple', checked:false, value:30}
 		];
 	
 	//définition des constantes
@@ -188,6 +206,13 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
 			}
 		}		
 	};
+	$scope.resetHandleValues = function(args){	
+		for(var i = 0; i < $scope.handleValues.length; i++){
+			if(i != args){
+				$scope.handleValues[i].checked = false;
+			}
+		}		
+	};
 	$scope.setDefenseScore = function() {
 		$scope.attackScore = this.attackScore;
             $scope.defenseScore = (91-parseFloat($scope.attackScore));
@@ -198,7 +223,7 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
     }
     
 	//validation du formulaire
-	$scope.form_deal= function(players, score, supp, oudlers, lastOudler, handle, attackScore, defenseScore, games) {
+	$scope.form_deal= function(players, score, supp, oudlers, lastOudler, handle, attackScore, defenseScore, games, handleValues) {
 	if(attackScore != undefined){
 		attackScore = attackScore;
 	} else if(defenseScore != undefined){
@@ -228,9 +253,17 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
 			for(var j = 0; j < handle.length; j++){
 				if(handle[j].checked){
 					if(handle[j].value == 'Attaque'){
-						score +=10;
+						for(var k = 0; k < handleValues.length; k++){
+							if(handleValues[k].checked){
+								score += handleValues[k].value;
+							}
+						}
 					} else if(handle[j].value == 'Défense'){
-						score -=10;
+						for(var k = 0; k < handleValues.length; k++){
+							if(handleValues[k].checked){
+								score -= handleValues[k].value;
+							}
+						}
 					} 
 				}
 			}
@@ -263,7 +296,7 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
 			} else players[i].score = parseFloat(score)*-1;	
 		}
 	}
-	dataFactory.deals.push({score : players, oudlers : oudlers, lastOudler : lastOudler, handle : handle, attackScore : attackScore, defenseScore : defenseScore, games : games});
+	dataFactory.deals.push({score : players, oudlers : oudlers, lastOudler : lastOudler, handle : handle, attackScore : attackScore, defenseScore : defenseScore, games : games, handleValues : handleValues});
 	//$scope.deals.push({score : players});
 		$state.go("deals");
 	}
@@ -298,6 +331,11 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
 					$scope.handle[i].checked = true;
 				} else $scope.handle[i].checked = false;
 		}
+		for(var i = 0; i < dataFactory.deals[$scope.edit].handleValues.length; i++){
+			if(dataFactory.deals[$scope.edit].handleValues[i].checked){
+					$scope.handleValues[i].checked = true;
+				} else $scope.handleValues[i].checked = false;
+		}
 		for(var i = 0; i < dataFactory.deals[$scope.edit].games.length; i++){
 			if(dataFactory.deals[$scope.edit].games[i].checked){
 					$scope.games[i].checked = true;
@@ -314,12 +352,89 @@ angular.module('starter', ['ionic']).run(function($ionicPlatform) {
 	}
 })
 .controller("HomeCtrl", function($scope, $state, dataFactory) {
-	
 	$scope.set_party = function() {
-		dataFactory.players.length = 0;
-		dataFactory.deals.length = 0;
+		if(localStorage.getItem('parties') == undefined){
+			dataFactory.players.length = 0;
+			dataFactory.deals.length = 0;
+			
+			var party = {
+				name:'name',
+				date : Date(),
+				players : dataFactory.players,
+				deals : dataFactory.deals,
+			}
+			var parties = [];
+			parties.push(party);
+			var JSONString = JSON.stringify(parties);
+			console.log("--- Affichage de linitialisation ---");
+			console.log(JSONString);
+			localStorage.setItem('parties', JSONString);
+			sessionStorage.setItem('party', 0);
+			
+		} else {
+			dataFactory.players.length = 0;
+			dataFactory.deals.length = 0;
+			var party = {
+				name:'name',
+				date : Date(),
+				players : dataFactory.players,
+				deals : dataFactory.deals,
+			}
+			var parties = JSON.parse(localStorage.getItem('parties'));
+			parties.push(party);
+			var JSONString = JSON.stringify(parties);
+			//console.log(JSONString);
+			localStorage.setItem('parties', JSONString);
+			var current = parties.length - 1;
+			sessionStorage.setItem('party', current);
+		
+		}
 		$state.go("players_list");
 	}
+	
+	if(localStorage.getItem('parties') != undefined){
+		$scope.parties = JSON.parse(localStorage.getItem('parties'));
+	}
+	
+  $scope.data = {
+    showDelete: false
+  };
+  
+  $scope.edit = function(item) {
+    alert('Edit Item: ');
+  };
+  $scope.share = function(item) {
+    alert('Share Item: ');
+  };
+  $scope.show = function(item, index) {
+    var current = index - 1;
+    sessionStorage.setItem('party', current);
+    var parties = JSON.parse(localStorage.getItem('parties'));
+    var party = parties[current];
+    console.log("--- Party à afficher ---");
+    console.log(party);
+	dataFactory.players = party.players;
+	dataFactory.deals = party.deals;
+	console.log("--- dataFactory --");
+	console.log(dataFactory);
+	$state.go("deals");
+  };
+  
+  $scope.moveItem = function(item, fromIndex, toIndex) {
+    $scope.parties.splice(fromIndex, 1);
+    $scope.parties.splice(toIndex, 0, item);
+  };
+  
+  $scope.onItemDelete = function(item, index) {
+  	var current = index - 1;
+    $scope.parties.splice($scope.parties.indexOf(item), 1);
+    
+    var parties = JSON.parse(localStorage.getItem('parties'));
+    parties.splice(current, 1);
+    var JSONString = JSON.stringify(parties);
+    localStorage.setItem('parties', JSONString);
+    
+  };
 })
 .config(function($stateProvider, $urlRouterProvider) {
 	//

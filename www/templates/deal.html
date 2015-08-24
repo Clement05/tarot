@@ -1,7 +1,7 @@
 <ion-view view-title="Donne">
     <ion-content class="padding">
         {{supp}}
-        <form ng-submit="form_deal(playersInDeal, score, playersInDeal_supp, oudlers, lastOudler, handle, attackScore, defenseScore, games)">
+        <form ng-submit="form_deal(playersInDeal, score, playersInDeal_supp, oudlers, lastOudler, handle, attackScore, defenseScore, games, handleValues)">
             <div class="card">
                 <div class="item item-text-wrap">
                     <div class="list list-inset">
@@ -70,6 +70,11 @@
                         </div>
                         <ion-checkbox ng-model="handle.checked" ng-repeat="handle in handle track by $index" ng-click="resetHandle($index)">
                             {{handle.value}}
+                        </ion-checkbox>
+                        <div class="item item-divider">
+                        </div>
+                        <ion-checkbox ng-model="handleValue.checked" ng-repeat="handleValue in handleValues track by $index" ng-click="resetHandleValues($index)">
+                            {{handleValue.name}}
                         </ion-checkbox>
                     </div>
                 </div>

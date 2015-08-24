@@ -10,11 +10,11 @@
             <div class="col">
                 Action
             </div>
-            <div class="col" ng-repeat="field in players track by $index">
+            <div class="col" ng-repeat="field in data.players track by $index">
                 {{field}}
             </div>
         </div>
-        <div class="row" ng-repeat="deal in deals track by $index">
+        <div class="row" ng-repeat="deal in data.deals track by $index">
             <div class="col">
                 <button class="button button-small icon ion-trash-b" ng-click="removeRow($index)">
 
@@ -23,7 +23,7 @@
 
                 </button>
             </div>
-            <div class="col" ng-repeat="field in players track by $index">
+            <div class="col" ng-repeat="field in data.players track by $index">
                 {{deal.score[$index].score}} <i class="icon ion-star" ng-show="{{deal.score[$index].dealer}}"></i>
             </div>
         </div>
@@ -32,12 +32,14 @@
             <div class="col">
                 Score <i class="button button-small icon ion-loop" ng-click="compute_totals()"></i>
             </div>
-            <div class="col" ng-repeat="field in players track by $index">
+            <div class="col" ng-repeat="field in data.players track by $index">
                 {{totals[$index]}}
             </div>
 
         </div>
-
+        <button class="button button-outline button-block button-positive icon-right ion-checkmark-circled" ng-click="save()">
+                Enregistrer
+            </button>
         <div class="item">
             <pre ng-bind="data | json"></pre>
         </div>
