@@ -1,0 +1,14 @@
+<ion-view view-title="Noms des joueurs">
+	<ion-content class="padding">
+		<form ng-submit="form_players_names(names)">
+			<div class="list">
+				<label class="item item-input" ng-repeat="field in names">
+					<input type="text" placeholder="{{field.name}}" ng-model="field.name">
+				</label>
+			</div>
+			<button class="button button-block ion-arrow-right-a icon-right button-positive">
+				Suivant
+			</button>
+		</form>
+	</ion-content>
+</ion-view>

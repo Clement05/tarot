@@ -1,0 +1,116 @@
+<ion-view view-title="Donne">
+    <ion-content class="padding">
+        {{supp}}
+        <form ng-submit="form_deal(playersInDeal, score, playersInDeal_supp, oudlers, lastOudler, handle, attackScore, defenseScore, games)">
+            <div class="card">
+                <div class="item item-text-wrap">
+                    <div class="list list-inset">
+                        <div class="item item-divider">
+                            Attaque
+                        </div>
+                        <ion-checkbox ng-model="field.checked" ng-repeat="field in playersInDeal track by $index" ng-click="resetPlayerInDeal($index)">
+                            {{field.text}}
+                        </ion-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="item item-text-wrap">
+                    <div class="list list-inset">
+                        <div class="item item-divider" ng-show="{{support}}">
+                            Support (à 5)
+                        </div>
+                        <ion-checkbox ng-model="supp.checked" ng-repeat="supp in playersInDeal_supp track by $index" ng-show="{{support}}" ng-click="resetPlayerInDeal_supp($index)">
+                            {{supp.text}}
+                        </ion-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="item item-text-wrap">
+                    <div class="list list-inset">
+                        <div class="item item-divider">
+                            Mise
+                        </div>
+                        <ion-checkbox ng-model="game.checked" ng-repeat="game in games track by $index" ng-click="resetGames($index)">
+                            {{game.name}}
+                        </ion-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="item item-text-wrap">
+                    <div class="list list-inset">
+                        <div class="item item-divider">
+                            Nombre de bout à l'attaque
+                        </div>
+                        <ion-checkbox ng-model="oudler.checked" ng-repeat="oudler in oudlers track by $index" ng-click="resetOudlers($index)">
+                            {{oudler.value}}
+                        </ion-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="item item-text-wrap">
+                    <div class="list list-inset">
+                        <div class="item item-divider">
+                            Petit au bout
+                        </div>
+                        <ion-checkbox ng-model="lastOudler.checked" ng-repeat="lastOudler in lastOudler track by $index" ng-click="resetLastOudler($index)">
+                            {{lastOudler.value}}
+                        </ion-checkbox>
+                    </div>
+                </div>
+            </div>
+             <div class="card">
+                <div class="item item-text-wrap">
+                    <div class="list list-inset">
+                        <div class="item item-divider">
+                            Poignée
+                        </div>
+                        <ion-checkbox ng-model="handle.checked" ng-repeat="handle in handle track by $index" ng-click="resetHandle($index)">
+                            {{handle.value}}
+                        </ion-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="item item-text-wrap">
+                    <div class="list list-inset">
+                        <div class="item item-divider">
+                            Points
+                        </div>
+                        <label class="item item-input">
+                            <span class="input-label">Points d'attaque : </span>
+                            <input type="number" placeholder="Points à l'attaque" ng-model="attackScore" ng-change="setDefenseScore()">
+                        </label>
+                        <label class="item item-input">
+                            <span class="input-label">Points de défense : </span>
+                            <input type="number" placeholder="Points à la défense" ng-model="defenseScore" ng-change="setAttackScore()">
+                        </label>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="item item-text-wrap">
+                    <div class="list list-inset">
+                        <div class="item item-divider">
+                            Score
+                        </div>
+                        <label class="item item-input">
+                            <input type="number" placeholder="Score" ng-model="score">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <button class="button button-outline button-block button-positive icon-right ion-checkmark-circled">
+                Enregistrer
+            </button>
+            <div class="item">
+                <pre ng-bind="playersInDeal | json"></pre>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,33 @@
+<ion-view view-title="Nombre de joueurs">
+    <ion-content class="padding">
+        <p>
+            <form ng-submit="form_players_list(players_number)">
+                <div class="list">
+                    <label class="item item-radio">
+                        <input type="radio" name="group" ng-model="players_number" value="2" ng-checked="true">
+                        <div class="item-content">
+                            2
+                        </div> <i class="radio-icon ion-checkmark"></i> </label>
+                    <label class="item item-radio">
+                        <input type="radio" name="group" ng-model="players_number" value="3">
+                        <div class="item-content">
+                            3
+                        </div> <i class="radio-icon ion-checkmark"></i> </label>
+                    <label class="item item-radio">
+                        <input type="radio" name="group" ng-model="players_number" value="4">
+                        <div class="item-content">
+                            4
+                        </div> <i class="radio-icon ion-checkmark"></i> </label>
+                    <label class="item item-radio">
+                        <input type="radio" name="group" ng-model="players_number" value="5">
+                        <div class="item-content">
+                            5
+                        </div> <i class="radio-icon ion-checkmark"></i> </label>
+                </div>
+                <button class="button button-block ion-arrow-right-a icon-right button-positive">
+                    Suivant
+                </button>
+            </form>
+        </p>
+    </ion-content>
+</ion-view>
